@@ -1,0 +1,93 @@
+APLICACIONES
+
+Construir un CRUD que permita gestionar los datos contenidos en cualquier tabla, con PHP o Javascript
+
+Lenguaje escogido: PHP
+Tabla escogida: Articulos
+ 
+<?php
+
+//Validar conexión a la base de datos
+
+$servername = "servidor";
+$username = "usuario";
+$password = "contraseña";
+$dbname = "nombre_bd";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+//Crear articulo
+
+if ($action == "create") {
+    $codart = $_POST['codart'];
+    $descrip = $_POST['descrip'];
+    $precio = $_POST['precio'];
+    $stock = $_POST['stock'];
+    $stock_min = $_POST['stock_min'];
+    $dto = $_POST['dto'];
+
+    $sql = "INSERT INTO articulos (codart, descrip, precio, stock, stock_min, dto) VALUES ('$codart', '$descrip', $precio, $stock, $stock_min, $dto)";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Artículo creado correctamente";
+    } else {
+        echo "Error al crear el artículo: " . $conn->error;
+    }
+}
+
+//Leer articulo
+
+if ($action == "read") {
+    $sql = "SELECT * FROM articulos";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        echo "<table border='1'><tr><th>Código</th><th>Descripción</th><th>Precio</th><th>Stock</th><th>Stock Mínimo</th><th>Descuento</th></tr>";
+        while($row = $result->fetch_assoc()) {
+            echo "<tr><td>".$row["codart"]."</td><td>".$row["descrip"]."</td><td>".$row["precio"]."</td><td>".$row["stock"]."</td><td>".$row["stock_min"]."</td><td>".$row["dto"]."</td></tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "0 resultados";
+    }
+}
+
+//Editar articulo
+
+if ($action == "edit") {
+    $codart = $_POST['codart'];
+    $descrip = $_POST['descrip'];
+    $precio = $_POST['precio'];
+    $stock = $_POST['stock'];
+    $stock_min = $_POST['stock_min'];
+    $dto = $_POST['dto'];
+
+    $sql = "UPDATE articulos SET descrip='$descrip', precio=$precio, stock=$stock, stock_min=$stock_min, dto=$dto WHERE codart='$codart'";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Artículo editado correctamente";
+    } else {
+        echo "Error al editar el artículo: " . $conn->error;
+    }
+}
+
+//Eliminar articulo
+
+if ($action == "delete") {
+    $codart = $_POST['codart'];
+
+    $sql = "DELETE FROM articulos WHERE codart='$codart'";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Artículo eliminado correctamente";
+    } else {
+        echo "Error al eliminar el artículo: " . $conn->error;
+    }
+}
+
+$conn->close();
+?>

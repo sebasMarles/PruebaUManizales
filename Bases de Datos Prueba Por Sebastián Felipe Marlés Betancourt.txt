@@ -1,0 +1,37 @@
+BASES DE DATOS
+
+1. El valor máximo y el valor mínimo de las cantidades en stock de los artículos cuyo precio se encuentra
+entre 5 y 25 euros.
+
+
+SELECT * FROM articulos WHERE articulos.precio BETWEEN 5 AND 25;
+
+---------------------------------------------------------------------------------------------------------
+
+2. De los clientes cuyo código está entre el 340 y el 350, mostrar el número de facturas que cada uno
+tiene con cada IVA.
+
+SELECT clientes.codcli, facturas.iva
+FROM clientes
+JOIN facturas ON clientes.codcli =  facturas.codcli
+WHERE clientes.codcli BETWEEN 340 AND 350;
+
+---------------------------------------------------------------------------------------------------------
+
+3. Las facturas del mes de diciembre de 2012.
+
+SELECT * FROM facturas
+WHERE MONTH(fecha) = 12 AND YEAR(fecha) = 2012;
+
+---------------------------------------------------------------------------------------------------------
+
+4. El código, nombre y población de cada cliente, junto con el número de facturas que ha hecho.
+Tenga en cuenta que hay varios clientes que aún no han hecho ninguna factura y que tambien deben
+aparecer en el listado. Ordenar el resultado por el nombre del cliente.
+
+SELECT c.codcli, c.nombre, p.nombre AS poblacion, COUNT(f.codfac) AS numero_de_facturas
+FROM clientes c
+LEFT JOIN facturas f ON c.codcli = f.codcli
+LEFT JOIN pueblos p ON c.codpue = p.codpue
+GROUP BY c.codcli, c.nombre, p.nombre
+ORDER BY c.nombre;
